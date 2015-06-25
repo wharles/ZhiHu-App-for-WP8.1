@@ -1,0 +1,17 @@
+﻿<Application
+    x:Class="ZhiHuApp.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZhiHuApp"
+    xmlns:locator="using:ZhiHuApp.Locators">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="Default" Source="ms-appx:///Styles/DefaultDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <locator:ViewModelLocator x:Key="Locator" />
+        </ResourceDictionary>
+    </Application.Resources>
+    
+</Application>

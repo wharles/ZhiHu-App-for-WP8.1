@@ -1,0 +1,42 @@
+﻿<Page
+    x:Class="ZhiHuApp.Views.NewsContentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZhiHuApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:ZhiHuApp.Converters"
+    mc:Ignorable="d"
+    NavigationCacheMode="Enabled"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.Resources>
+        <converter:UnitConverter x:Key="UnitConverter" />
+    </Page.Resources>
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Like" Label="{Binding StoryExtra.Popularity,Converter={StaticResource UnitConverter},ConverterParameter='赞 '}" />
+                <AppBarButton Icon="Message" Label="{Binding StoryExtra.ShortComments,Converter={StaticResource UnitConverter},ConverterParameter='短评 '}" Command="{Binding CommentCommand}" CommandParameter="short-comments" />
+                <AppBarButton Icon="Comment" Label="{Binding StoryExtra.LongComments,Converter={StaticResource UnitConverter},ConverterParameter='长评 '}" Command="{Binding CommentCommand}" CommandParameter="long-comments" />
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="btnShare" Label="分享" Click="btnShare_Click" />
+                <AppBarButton Label="设置" Command="{Binding SettingCommand}" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
+    <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <ContentThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <WebView ScriptNotify="webView_ScriptNotify" Source="ms-appx-web:///Assets/Htmls/NewContentPage.html" x:Name="webView" />
+        <ProgressRing IsActive="{Binding IsActive}" Background="{ThemeResource PhoneBackgroundBrush}" />
+    </Grid>
+
+</Page>

@@ -1,0 +1,70 @@
+﻿<Page
+    x:Class="ZhiHuApp.Views.SectionPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZhiHuApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Extensions="using:ZhiHuApp.Extensions"
+    xmlns:converter="using:ZhiHuApp.Converters"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converter:DateTimeToOffsetConverter x:Key="DateTimeToOffsetConverter" />
+        
+        <DataTemplate x:Key="ListViewItemTemplate">
+            <Grid Margin="2,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Width="84" Height="84">
+                    <StackPanel.Background>
+                        <ImageBrush ImageSource="ms-appx:///Assets/Images/default.png" />
+                    </StackPanel.Background>
+                    <Image Source="{Binding Images[0]}" />
+                </StackPanel>
+                <TextBlock Grid.Column="1" Margin="5,0" VerticalAlignment="Center" Text="{Binding Title}" FontSize="20" TextWrapping="Wrap" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <ContentThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="知乎日报" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock  Margin="0,-6.5,0,26.5"  Style="{ThemeResource HeaderTextBlockStyle}" Text="{Binding Section.Name}" TextWrapping="Wrap" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <ListView ItemsSource="{Binding Section.Stories}" IsItemClickEnabled="True" Extensions:ItemClickCommand.Command="{Binding ItemClickCommand}" ItemTemplate="{StaticResource ListViewItemTemplate}">
+                <ListView.Header>
+                    <DatePicker  Header="选择日期" x:Name="datePicker"  Date="{Binding SelectedDate, Mode=TwoWay, Converter={StaticResource DateTimeToOffsetConverter}}" />
+                </ListView.Header>
+            </ListView>
+        </Grid>
+        <ProgressRing Grid.RowSpan="2" IsActive="{Binding IsActive}" Background="{ThemeResource PhoneBackgroundBrush}" />
+    </Grid>
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="设置" Command="{Binding SettingCommand}" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>

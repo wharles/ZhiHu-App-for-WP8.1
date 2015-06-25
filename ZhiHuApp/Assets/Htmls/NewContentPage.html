@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=400,minimum-scale=0.5,maximum-scale=1.0,user-scalable=no, initial-scale=1.0" />
+    <title></title>
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+
+    <style type="text/css">
+        #imgDiv {
+            height: 300px;
+            width: 400px;
+            position: relative;
+            display:none;
+        }
+
+        .blackDiv {
+            background-color: rgba(96, 96, 96,0.6);
+            width: 400px;
+            height: 100px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            display: table;
+        }
+
+        #title {
+            font-size: 24px;
+            display: table-cell;
+            vertical-align: middle;
+            color: #FFFFFF;
+            padding-left: 10px;
+        }
+
+        #copyRight {
+            color: lightgray;
+            font-size: 12px;
+            float: right;
+            padding-right: 10px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        //init data
+        function ShowBody(content, url, image, title, copy) {
+            $("<link>").attr({ rel: "stylesheet", type: "text/css", href: url }).appendTo("head");
+            $("#bodyContent").html(content);
+            $("div").remove(".img-place-holder");
+            if (image != "") {
+                $("#imgDiv").show();
+                $("#imgDiv").css("background-image", "url(" + image + ")");
+            }
+
+            if (copy != "")
+                $("#title").html(title + "<br /><span id=\"copyRight\">" + copy + "</span>");
+            $("a").each(function () {
+                var href = $(this).attr("href");
+                $(this).attr("href", "");
+                $(this).click(function (event) { event.preventDefault(); });
+                $(this).click(function () {
+                    window.external.notify(href);
+                });
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="imgDiv">
+        <div class="blackDiv">
+            <span id="title"></span>
+        </div>
+    </div>
+    <span id="bodyContent"></span>
+</body>
+</html>
