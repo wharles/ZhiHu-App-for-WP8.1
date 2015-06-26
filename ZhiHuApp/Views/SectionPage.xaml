@@ -8,6 +8,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Extensions="using:ZhiHuApp.Extensions"
     xmlns:converter="using:ZhiHuApp.Converters"
+    NavigationCacheMode="Required"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 

@@ -36,7 +36,10 @@ namespace ZhiHuApp.Views
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            this.DataContext = new SectionPageViewModel(e.Parameter.ToString());
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                this.DataContext = new SectionPageViewModel(e.Parameter.ToString());
+            }
             Messenger.Default.Register<NotificationMessage>(this, (msg) =>
             {
                 if (msg.Notification == "OnItemClick")

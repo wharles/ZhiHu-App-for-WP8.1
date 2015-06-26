@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -33,17 +34,20 @@ namespace ZhiHuApp.Views
         public NewsContentPage()
         {
             this.InitializeComponent();
+            //share
+            DataTransferManager.GetForCurrentView().DataRequested += OnShareDataRequested;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            dynamic obj = e.Parameter;
-            int id = Convert.ToInt32(obj.Id);
-            this.DataContext = new NewsContentPageViewModel(id.ToString());
-            //share
-            DataTransferManager.GetForCurrentView().DataRequested += OnShareDataRequested;
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                dynamic obj = e.Parameter;
+                int id = Convert.ToInt32(obj.Id);
+                this.DataContext = new NewsContentPageViewModel(id.ToString());
+            }
             //register message
-            Messenger.Default.Register<NotificationMessage>(this, async (msg) =>
+            Messenger.Default.Register<NotificationMessage>(this, (msg) =>
             {
                 if (msg.Notification == "OnCommandClick")
                 {
@@ -54,22 +58,31 @@ namespace ZhiHuApp.Views
                     if (msg.Sender != null)
                     {
                         dynamic newsContent = msg.Sender;
-                        try
+                        StringBuilder sbHtml = new StringBuilder(10000);
+                        sbHtml.Append("<!DOCTYPE html><html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta charset=\"utf-8\" /><meta name=\"viewport\" content=\"width=400,minimum-scale=0.5,maximum-scale=1.0,user-scalable=no, initial-scale=1.0\" /><title></title><script src=\"http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js\"></script>");
+                        sbHtml.Append("<link type=\"text/css\" rel=\"stylesheet\" href=\"" + newsContent.CSS + "\" />");
+                        sbHtml.Append("<style type=\"text/css\"> #imgDiv { height: 300px;width: 400px; position: relative; }");
+                        sbHtml.Append(".blackDiv { background-color: rgba(96, 96, 96,0.6); width: 400px; height: 100px; position: absolute; bottom: 0px; left: 0px;display: table; }");
+                        sbHtml.Append("#title { font-size: 24px; display: table-cell; vertical-align: middle; color: #FFFFFF; padding-left: 10px; }");
+                        sbHtml.Append("#copyRight { color: lightgray; font-size: 12px;  float: right; padding-right: 10px; } </style><script type=\"text/javascript\">");
+                        string js = @"$(document).ready(function () {
+                            $('div').remove('.img-place-holder');
+                            $('a').each(function () {
+                                var href = $(this).attr('href');
+                                $(this).attr('href', '');
+                                $(this).click(function (event) { event.preventDefault(); });
+                                $(this).click(function () {
+                                    window.external.notify(href);
+                                });
+                            });
+                        });</script></head><body>";
+                        sbHtml.Append(js);
+                        if (!string.IsNullOrEmpty(newsContent.Image))
                         {
-                            await webView.InvokeScriptAsync("ShowBody", new string[] { newsContent.Body, newsContent.CSS,
-                                newsContent.Image ?? "", newsContent.Title, newsContent.ImageSource ?? "" });
+                            sbHtml.Append("<div id=\"imgDiv\" style=\"background-image:url('" + newsContent.Image + "');\"><div class=\"blackDiv\"><span id=\"title\">" + newsContent.Title + "<br /><span id=\'copyRight\'>" + newsContent.ImageSource + "</span></span></div></div>");
                         }
-                        catch (Exception ex)
-                        {
-                            //when loading first time,there a error that no js name found.so do this to fix it.
-                            webView.DOMContentLoaded += async(s, args) =>
-                            {
-                                await webView.InvokeScriptAsync("ShowBody", new string[] { newsContent.Body, newsContent.CSS,
-                                newsContent.Image ?? "", newsContent.Title, newsContent.ImageSource ?? "" });
-                            };
-                            webView.Navigate(new Uri("ms-appx-web:///Assets/Htmls/NewContentPage.html"));
-                        }
-
+                        sbHtml.Append(newsContent.Body + "</body></html>");
+                        webView.NavigateToString(sbHtml.ToString());
                         title = newsContent.Title;
                         shareUrl = newsContent.ShareUrl;
                     }
@@ -84,8 +97,6 @@ namespace ZhiHuApp.Views
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             webView.Refresh();
-            DataTransferManager.GetForCurrentView().DataRequested -= OnShareDataRequested;
-
             Messenger.Default.Unregister<NotificationMessage>(this);
         }
 

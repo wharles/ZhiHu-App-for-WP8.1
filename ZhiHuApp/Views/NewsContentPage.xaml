@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converter="using:ZhiHuApp.Converters"
     mc:Ignorable="d"
-    NavigationCacheMode="Enabled"
+    NavigationCacheMode="Required"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     
     <Page.Resources>
@@ -35,7 +35,7 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
 
-        <WebView ScriptNotify="webView_ScriptNotify" Source="ms-appx-web:///Assets/Htmls/NewContentPage.html" x:Name="webView" />
+        <WebView ScriptNotify="webView_ScriptNotify" x:Name="webView" />
         <ProgressRing IsActive="{Binding IsActive}" Background="{ThemeResource PhoneBackgroundBrush}" />
     </Grid>
 
