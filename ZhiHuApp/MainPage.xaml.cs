@@ -58,21 +58,22 @@ namespace ZhiHuApp
             // this event is handled for you.
             Messenger.Default.Register<NotificationMessage>(this, (msg) =>
             {
-                if (msg.Notification == "OnItemClick")
+                switch (msg.Notification)
                 {
-                    Frame.Navigate(typeof(Views.NewsContentPage), msg.Sender);
-                }
-                if (msg.Notification == "OnGridViewItemClick")
-                {
-                    Frame.Navigate(typeof(Views.ThemePage), msg.Sender);
-                }
-                if (msg.Notification == "OnGridViewSectionClick")
-                {
-                    Frame.Navigate(typeof(Views.SectionPage), msg.Sender);
-                }
-                if (msg.Notification == "OnSettingButtonClick")
-                {
-                    Frame.Navigate(typeof(Views.SettingsPage));
+                    case "OnItemClick":
+                        Frame.Navigate(typeof(Views.NewsContentPage), msg.Sender);
+                        break;
+                    case "OnGridViewItemClick":
+                        Frame.Navigate(typeof(Views.ThemePage), msg.Sender);
+                        break;
+                    case "OnGridViewSectionClick":
+                        Frame.Navigate(typeof(Views.SectionPage), msg.Sender);
+                        break;
+                    case "OnSettingButtonClick":
+                        Frame.Navigate(typeof(Views.SettingsPage));
+                        break;
+                    default:
+                        break;
                 }
             });
         }

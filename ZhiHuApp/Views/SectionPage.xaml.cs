@@ -42,13 +42,16 @@ namespace ZhiHuApp.Views
             }
             Messenger.Default.Register<NotificationMessage>(this, (msg) =>
             {
-                if (msg.Notification == "OnItemClick")
+                switch (msg.Notification)
                 {
-                    Frame.Navigate(typeof(Views.NewsContentPage), msg.Sender);
-                }
-                if (msg.Notification == "OnSettingButtonClick")
-                {
-                    Frame.Navigate(typeof(Views.SettingsPage));
+                    case "OnItemClick":
+                        Frame.Navigate(typeof(Views.NewsContentPage), msg.Sender);
+                        break;
+                    case "OnSettingButtonClick":
+                        Frame.Navigate(typeof(Views.SettingsPage));
+                        break;
+                    default:
+                        break;
                 }
             });
         }
