@@ -53,29 +53,23 @@ namespace ZhiHuApp.ViewModels
 
         public RelayCommand<Story> ItemClickCommand { set; get; }
 
-        private void LoadTheme()
+        private async void LoadTheme()
         {
-            Task.Run(async () =>
+            ICommonService<Theme> themeService = new CommonService<Theme>();
+            Theme result = await themeService.GetObjectAsync("4", "theme", _id);
+            if (result != null)
             {
-                ICommonService<Theme> themeService = new CommonService<Theme>();
-                Theme result = await themeService.GetObjectAsync("4", "theme", _id);
-                await DispatcherHelper.RunAsync(async() =>
-                {
-                    if (result != null)
-                    {
-                        this.Theme = new Theme();
-                        this.Theme.Stories = result.Stories;
-                        this.Theme.Name = result.Name;
-                        this.Theme.Editors = result.Editors;
-                        this.IsActive = false;
-                    }
-                    else
-                    {
-                        MessageDialog msg = new MessageDialog(themeService.ExceptionsParameter);
-                        await msg.ShowAsync();
-                    }
-                });
-            });
+                this.Theme = new Theme();
+                this.Theme.Stories = result.Stories;
+                this.Theme.Name = result.Name;
+                this.Theme.Editors = result.Editors;
+                this.IsActive = false;
+            }
+            else
+            {
+                MessageDialog msg = new MessageDialog(themeService.ExceptionsParameter);
+                await msg.ShowAsync();
+            }
         }
 
     }

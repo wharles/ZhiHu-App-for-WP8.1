@@ -140,36 +140,40 @@ namespace ZhiHuApp.ViewModels
         public RelayCommand SettingCommand { get; set; }
 
         /// <summary>
-        /// Load Main Page DataSource
+        /// Load all data
         /// </summary>
-        private void LoadMainSource()
+        private async void LoadMainSource()
         {
-            Task.Run(async () =>
+            try
             {
-                var _startImage = await _startImageService.GetObjectAsync("4", "start-image", "1080*1776");
-                var themes = await _themesService.GetObjectAsync("4", "themes");
-                var latest = await _latestNewsService.GetObjectAsync("4", "news", "latest");
-                var hot = await _hotNewsService.GetObjectAsync("3", "news", "hot");
-                var _section = await _sectionsService.GetObjectAsync("3", "sections");
-                ZhiHuAppHelper.DownloadImage.SaveImage(_startImage.Img);
-                await DispatcherHelper.RunAsync(async () =>
+                var _startImage = _startImageService.GetObjectAsync("4", "start-image", "1080*1776");
+                var themes = _themesService.GetObjectAsync("4", "themes");
+                var latest = _latestNewsService.GetObjectAsync("4", "news", "latest");
+                var hot = _hotNewsService.GetObjectAsync("3", "news", "hot");
+                var _section = _sectionsService.GetObjectAsync("3", "sections");
+                //await when all task finish
+                await Task.WhenAll(_startImage, themes, latest, hot, _section);
+                DownloadImage.SaveImage(_startImage.Result.Img);
+
+                if (themes != null && latest != null && hot != null && _startImage != null)
                 {
-                    if (themes != null && latest != null && hot != null && _startImage != null)
-                    {
-                        this.HotNews = hot;
-                        this.Themes = themes;
-                        this.LatestNews = latest;
-                        //this.StartImage = _startImage;
-                        this.Sections = _section;
-                        this.IsCompleted = true;
-                    }
-                    else
-                    {
-                        MessageDialog msg = new MessageDialog(_startImageService.ExceptionsParameter, "提示");
-                        await msg.ShowAsync();
-                    }
-                });
-            });
+                    this.HotNews = hot.Result;
+                    this.Themes = themes.Result;
+                    this.LatestNews = latest.Result;
+                    this.Sections = _section.Result;
+                    this.IsCompleted = true;
+                }
+                else
+                {
+                    MessageDialog msg = new MessageDialog(_startImageService.ExceptionsParameter, "提示");
+                    await msg.ShowAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
     }
 }

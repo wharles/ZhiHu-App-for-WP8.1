@@ -33,13 +33,10 @@ namespace ZhiHuAppHelper
             return file;
         }
 
-        public static void SaveImage(string url)
+        public static async void SaveImage(string url)
         {
-            Task.Run(async() =>
-            {
-                StorageFolder applicationFolder = ApplicationData.Current.LocalFolder;
-                await SaveAsync(new Uri(url), applicationFolder, "splashimage.jpg");
-            });           
+            StorageFolder applicationFolder = ApplicationData.Current.LocalFolder;
+            await SaveAsync(new Uri(url), applicationFolder, "splashimage.jpg");
         }
     }
 }

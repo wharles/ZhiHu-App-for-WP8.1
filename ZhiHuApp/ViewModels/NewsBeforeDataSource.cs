@@ -19,13 +19,10 @@ namespace ZhiHuApp.ViewModels
 
         protected async override Task<IList<Story>> LoadItemsAsync()
         {
-            return await Task.Run(async() =>
-            {
-                string date = DateTime.Now.AddDays(-_currentPage).ToString("yyyyMMdd");
-                var result = await _latestNesService.GetObjectAsync("4", "news", "before", date);
+            string date = DateTime.Now.AddDays(-_currentPage).ToString("yyyyMMdd");
+            var result = await _latestNesService.GetObjectAsync("4", "news", "before", date);
 
-                return result.Stories == null ? null : result.Stories.ToList();
-            });
+            return result.Stories == null ? null : result.Stories.ToList();
         }
 
         protected override void AddItems(IList<Story> items)

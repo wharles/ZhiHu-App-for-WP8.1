@@ -78,41 +78,32 @@ namespace ZhiHuApp.ViewModels
         public RelayCommand<Story> ItemClickCommand { set; get; }
         public RelayCommand SettingCommand { get; set; }
 
-        private void LoadSection()
+        private async void LoadSection()
         {
-            Task.Run(async () =>
-            {
-                ICommonService<Section> sectionService = new CommonService<Section>();
-                Section result = await sectionService.GetObjectAsync("3", "section", _id);
-                await LoadAsync(sectionService, result);
-            });
+            ICommonService<Section> sectionService = new CommonService<Section>();
+            Section result = await sectionService.GetObjectAsync("3", "section", _id);
+            await LoadAsync(sectionService, result);
         }
 
-        private void LoadSection(string timestamp)
+        private async void LoadSection(string timestamp)
         {
-            Task.Run(async () =>
-            {
-                ICommonService<Section> sectionService = new CommonService<Section>();
-                Section result = await sectionService.GetObjectAsync("3", "section", _id, "before", timestamp);
-                await LoadAsync(sectionService, result);
-            });
+            ICommonService<Section> sectionService = new CommonService<Section>();
+            Section result = await sectionService.GetObjectAsync("3", "section", _id, "before", timestamp);
+            await LoadAsync(sectionService, result);
         }
 
         private async Task LoadAsync(ICommonService<Section> sectionService, Section result)
         {
-            await DispatcherHelper.RunAsync(async () =>
+            if (result != null)
             {
-                if (result != null)
-                {
-                    this.Section = result;
-                    this.IsActive = false;
-                }
-                else
-                {
-                    MessageDialog msg = new MessageDialog(sectionService.ExceptionsParameter);
-                    await msg.ShowAsync();
-                }
-            });
+                this.Section = result;
+                this.IsActive = false;
+            }
+            else
+            {
+                MessageDialog msg = new MessageDialog(sectionService.ExceptionsParameter);
+                await msg.ShowAsync();
+            }
         }
     }
 }

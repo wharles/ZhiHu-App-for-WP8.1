@@ -69,35 +69,42 @@ namespace ZhiHuApp.ViewModels
         public RelayCommand ShareCommand { get; set; }
         public RelayCommand SettingCommand { get; set; }
 
-        private void LoadNewsContent(string id)
+        private async void LoadNewsContent(string id)
         {
-            Task.Run(async () =>
+            try
             {
                 ICommonService<NewsContent> newsContentService = new CommonService<NewsContent>();
-                var content = await newsContentService.GetObjectAsync("4", "news", id);
+                var task1 = newsContentService.GetObjectAsync("4", "news", id);
 
                 ICommonService<StoryExtra> storyExtraService = new CommonService<StoryExtra>();
-                var extra = await storyExtraService.GetObjectAsync("4", "story-extra", id);
+                var task2 = storyExtraService.GetObjectAsync("4", "story-extra", id);
 
-                await DispatcherHelper.RunAsync(async () =>
+                await Task.WhenAll(task2, task1);
+
+                NewsContent content = task1.Result;
+                StoryExtra extra = task2.Result;
+
+                if (content != null)
                 {
-                    if (content != null)
-                    {
-                        this.StoryExtra = extra;
-                        this.NewsContent = content;
-                        var obj = new { Body = content.Body, CSS = content.Css[0], Image = content.Image, Title = content.Title, ImageSource = content.ImageSource, ShareUrl = content.ShareUrl };
-                        Messenger.Default.Send<NotificationMessage>(new NotificationMessage(obj, "OnLoadCompleted"));
-                        //Delay to destroy animation
-                        await Task.Delay(500);
-                        this.IsActive = false;
-                    }
-                    else
-                    {
-                        MessageDialog msg = new MessageDialog(newsContentService.ExceptionsParameter, "提示");
-                        await msg.ShowAsync();
-                    }
-                });
-            });
+                    this.StoryExtra = extra;
+                    this.NewsContent = content;
+                    var obj = new { Body = content.Body, CSS = content.Css[0], Image = content.Image, Title = content.Title, ImageSource = content.ImageSource, ShareUrl = content.ShareUrl };
+                    Messenger.Default.Send<NotificationMessage>(new NotificationMessage(obj, "OnLoadCompleted"));
+                    //Delay to destroy animation
+                    await Task.Delay(500);
+                    this.IsActive = false;
+                }
+                else
+                {
+                    MessageDialog msg = new MessageDialog(newsContentService.ExceptionsParameter, "提示");
+                    await msg.ShowAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
     }
