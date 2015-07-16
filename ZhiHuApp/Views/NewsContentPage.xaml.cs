@@ -79,7 +79,7 @@ namespace ZhiHuApp.Views
                                     window.external.notify(href);
                                 });
                             });
-                        });</script></head><body>";
+                            });</script></head><body>";
                             sbHtml.Append(js);
                             if (!string.IsNullOrEmpty(newsContent.Image))
                             {
@@ -100,6 +100,7 @@ namespace ZhiHuApp.Views
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            webView.Refresh();
             Messenger.Default.Unregister<NotificationMessage>(this);
         }
 

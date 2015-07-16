@@ -35,7 +35,7 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
 
-        <WebView ScriptNotify="webView_ScriptNotify" x:Name="webView" />
+        <WebView DefaultBackgroundColor="Transparent" ScriptNotify="webView_ScriptNotify" x:Name="webView" />
         <ProgressRing IsActive="{Binding IsActive}" Background="{ThemeResource PhoneBackgroundBrush}" />
     </Grid>
 
