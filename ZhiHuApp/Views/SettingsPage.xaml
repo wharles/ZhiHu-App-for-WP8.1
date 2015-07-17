@@ -22,14 +22,25 @@
         </Grid.ChildrenTransitions>
         
         <Pivot Title="知乎日报">
-            <PivotItem Header="权限">
-                <ToggleSwitch x:Name="toggle" Header="动态磁贴" IsOn="True" OffContent="关" OnContent="开" VerticalAlignment="Top">
-                    <Interactivity:Interaction.Behaviors>
-                        <Core:EventTriggerBehavior EventName="Toggled">
-                            <Core:InvokeCommandAction Command="{Binding ToggledCommand}" CommandParameter="{Binding ElementName=toggle,Path=IsOn}"/>
-                        </Core:EventTriggerBehavior>
-                    </Interactivity:Interaction.Behaviors>
-                </ToggleSwitch>
+            <PivotItem Header="设置">
+                <StackPanel>
+                    <ToggleSwitch x:Name="toggle" Header="动态磁贴" IsOn="True" OffContent="关" OnContent="开" VerticalAlignment="Top">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Toggled">
+                                <Core:InvokeCommandAction Command="{Binding ToggledCommand}" CommandParameter="{Binding ElementName=toggle,Path=IsOn}"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </ToggleSwitch>
+                    <ComboBox x:Name="cbTheme" Header="主题" SelectedIndex="{Binding Index}">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="SelectionChanged">
+                                <Core:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=cbTheme,Path=SelectedIndex}"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                        <ComboBoxItem Content="黑" />
+                        <ComboBoxItem Content="白" />
+                    </ComboBox>
+                </StackPanel>
             </PivotItem>
             <PivotItem Header="关于">
                 <PivotItem.Resources>

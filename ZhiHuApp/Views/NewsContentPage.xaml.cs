@@ -100,7 +100,10 @@ namespace ZhiHuApp.Views
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            webView.Refresh();
+            if (e.SourcePageType != typeof(CommentsPage))
+            {
+                webView.Refresh();
+            }
             Messenger.Default.Unregister<NotificationMessage>(this);
         }
 

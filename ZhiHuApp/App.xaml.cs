@@ -40,6 +40,13 @@ namespace ZhiHuApp
             this.Suspending += this.OnSuspending;
 
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+
+            var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            if (settings.Values.ContainsKey("currentTheme") && (string)settings.Values["currentTheme"] == "白")
+                RequestedTheme = ApplicationTheme.Light;
+            else
+                RequestedTheme = ApplicationTheme.Dark; 
         }
 
         private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)

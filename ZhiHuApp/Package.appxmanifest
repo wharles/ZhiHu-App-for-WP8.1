@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="22340Cherlies.WP8.1" Publisher="CN=0BDCBD89-B210-4F78-B333-0EA5F9C16588" Version="1.2.0.0" />
+  <Identity Name="22340Cherlies.WP8.1" Publisher="CN=0BDCBD89-B210-4F78-B333-0EA5F9C16588" Version="1.2.0.2" />
   <mp:PhoneIdentity PhoneProductId="65235534-f021-4ca4-bbef-ae0d1f4c773d" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>知乎日报WP8.1</DisplayName>

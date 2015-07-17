@@ -36,5 +36,6 @@ namespace ZhiHuApp.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
         }
+
     }
 }

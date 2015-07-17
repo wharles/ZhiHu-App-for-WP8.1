@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Popups;
 using ZhiHuApp.Models;
 
 namespace ZhiHuApp.ViewModels
@@ -27,6 +28,11 @@ namespace ZhiHuApp.ViewModels
                 {
                     localSettings.Values.Add("liveTile", b);
                 }
+            });
+            this.Index = LoadSetting();
+            this.SelectionChangedCommand = new RelayCommand<int>((e) =>
+            {
+                SaveSetting(e);
             });
         }
 
@@ -52,6 +58,40 @@ namespace ZhiHuApp.ViewModels
             }
         }
 
+        private int index;
+
+        public int Index
+        {
+            get { return index; }
+            set
+            {
+                index = value;
+                RaisePropertyChanged(() => Index);
+            }
+        }
+
+
+        private async void SaveSetting(int value)
+        {
+            if (localSettings.Values.ContainsKey("currentTheme"))
+            {
+                localSettings.Values.Remove("currentTheme");
+            }
+
+            localSettings.Values.Add("currentTheme", value == 1 ? "白" : "黑");
+            MessageDialog msg = new MessageDialog("主题已更改，重启应用后生效!", "提示");
+            await msg.ShowAsync();
+        }
+
+        private int LoadSetting()
+        {
+            if (localSettings.Values.ContainsKey("currentTheme") && (string)localSettings.Values["currentTheme"] == "白")
+                return 1;
+            else
+                return 0;
+        }
+
         public RelayCommand<bool> ToggledCommand { get; set; }
+        public RelayCommand<int> SelectionChangedCommand { get; set; }
     }
 }
